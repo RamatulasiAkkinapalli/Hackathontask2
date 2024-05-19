@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Job</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Apply for Job</h1>
+    <form id="jobApplicationForm">
+        <label for="firstName">First Name*</label>
+        <input type="text" id="firstName" name="firstName" required>
+
+        <label for="lastName">Last Name*</label>
+        <input type="text" id="lastName" name="lastName" required>
+
+        <label for="email">Email*</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Phone Number*</label>
+        <input type="tel" id="phone" name="phone" required>
+
+        <label for="address">Address*</label>
+        <input type="text" id="address" name="address" required>
+
+        <label for="city">City*</label>
+        <input type="text" id="city" name="city" required>
+
+        <label for="state">State*</label>
+        <input type="text" id="state" name="state" required>
+
+        <label for="zip">Zip Code* (numeric)</label>
+        <input type="text" id="zip" name="zip" required pattern="\d+">
+
+        <label for="country">Country*</label>
+        <select id="country" name="country" required>
+            <option value="">Select Country</option>
+            <option value="USA">USA</option>
+            <option value="Canada">Canada</option>
+            <option value="UK">UK</option>
+            <!-- Add more options as needed -->
+        </select>
+
+        <label for="eduLevel">Education Level*</label>
+        <select id="eduLevel" name="eduLevel" required>
+            <option value="">Select Education Level</option>
+            <option value="High School">High School</option>
+            <option value="Associate">Associate</option>
+            <option value="Bachelor">Bachelor</option>
+            <option value="Master">Master</option>
+            <option value="Doctorate">Doctorate</option>
+        </select>
+
+        <label for="eduType">Education Type*</label>
+        <select id="eduType" name="eduType" required>
+            <option value="">Select Education Type</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Online">Online</option>
+        </select>
+
+        <label for="resume">Resume* (PDF, DOC, DOCX)</label>
+        <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+
+        <label for="coverLetter">Cover Letter (optional)</label>
+        <textarea id="coverLetter" name="coverLetter" rows="4"></textarea>
+
+        <label>
+            <input type="checkbox" id="employed" name="employed">
+            Are you currently employed?
+        </label>
+
+        <div id="employmentDetails" class="hidden">
+            <label for="currentEmployer">Current Employer*</label>
+            <input type="text" id="currentEmployer" name="currentEmployer">
+
+            <label for="yearsOfExperience">Years of Experience* (numeric)</label>
+            <input type="number" id="yearsOfExperience" name="yearsOfExperience">
+        </div>
+
+        <label for="jobSelect">Jobs you want to apply for*</label>
+        <select id="jobSelect" name="jobSelect[]" multiple required>
+            <option value="Job1">Job 1</option>
+            <option value="Job2">Job 2</option>
+            <option value="Job3">Job 3</option>
+            <!-- Add more options as needed -->
+        </select>
+
+        <div id="errorMessage" class="error"></div>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('jobApplicationForm');
+            const employedCheckbox = document.getElementById('employed');
+            const employmentDetails = document.getElementById('employmentDetails');
+            const errorMessage = document.getElementById('errorMessage');
+
+            employedCheckbox.addEventListener('change', function () {
+                if (employedCheckbox.checked) {
+                    employmentDetails.classList.remove('hidden');
+                } else {
+                    employmentDetails.classList.add('hidden');
+                }
+            });
+
+            form.addEventListener('submit', function (event) {
+                errorMessage.textContent = '';
+                const requiredFields = document.querySelectorAll('[required]');
+                let valid = true;
+
+                requiredFields.forEach(function (field) {
+                    if (!field.value.trim()) {
+                        valid = false;
+                        errorMessage.textContent = 'Please fill in all required fields.';
+                    }
+                });
+
+                const zip = document.getElementById('zip').value;
+                if (!/^\d+$/.test(zip)) {
+                    valid = false;
+                    errorMessage.textContent = 'Zip code must be numeric.';
+                }
+
+                if (employedCheckbox.checked) {
+                    const currentEmployer = document.getElementById('currentEmployer').value.trim();
+                    const yearsOfExperience = document.getElementById('yearsOfExperience').value.trim();
+
+                    if (!currentEmployer || !yearsOfExperience) {
+                        valid = false;
+                        errorMessage.textContent = 'Please fill in current employer and years of experience.';
+                    }
+
+                    if (!/^\d+$/.test(yearsOfExperience)) {
+                        valid = false;
+                        errorMessage.textContent = 'Years of experience must be numeric.';
+                    }
+                }
+
+                if (!valid) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
