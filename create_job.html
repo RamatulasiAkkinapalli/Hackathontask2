@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Job Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Enter Job Data</h1>
+    <form id="jobForm">
+        <label for="title">Title*</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="type">Type*</label>
+        <select id="type" name="type" required>
+            <option value="">Select Type</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Contract">Contract</option>
+        </select>
+
+        <label for="department">Department*</label>
+        <input type="text" id="department" name="department" required>
+
+        <label for="country">Country*</label>
+        <select id="country" name="country" required>
+            <option value="">Select Country</option>
+            <option value="USA">USA</option>
+            <option value="Canada">Canada</option>
+            <option value="India">UK</option>
+            <!-- Add more options as needed -->
+        </select>
+
+        <label for="description">Description*</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+
+        <label for="openingDate">Opening Date*</label>
+        <input type="date" id="openingDate" name="openingDate" required>
+
+        <div id="errorMessage" class="error"></div>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const jobForm = document.getElementById('jobForm');
+            const openingDateField = document.getElementById('openingDate');
+            const errorMessage = document.getElementById('errorMessage');
+            const today = new Date().toISOString().split('T')[0];
+
+            // Set the opening date field to the current date
+            openingDateField.value = today;
+
+            jobForm.addEventListener('submit', function (event) {
+                errorMessage.textContent = '';
+                const title = document.getElementById('title').value.trim();
+                const type = document.getElementById('type').value;
+                const department = document.getElementById('department').value.trim();
+                const country = document.getElementById('country').value;
+                const description = document.getElementById('description').value.trim();
+                const openingDate = openingDateField.value;
+
+                // Validate required fields are not blank
+                if (!title || !type || !department || !country || !description || !openingDate) {
+                    errorMessage.textContent = 'Please fill in all required fields.';
+                    event.preventDefault();
+                    return;
+                }
+
+                // Validate the opening date is not greater than the current date
+                if (new Date(openingDate) > new Date(today)) {
+                    errorMessage.textContent = 'Opening date cannot be in the future.';
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
